@@ -3,8 +3,8 @@
 import os
 import time
 from collections import deque
-import config
-import slskd 
+import config  # Importación absoluta, no relativa
+import slskd
 import betanin
 
 print(f"Hello! BeetSeeker is up and monitoring {config.DOWNLOADS_DIRECTORY}. I'll get started in a few seconds..\n\n")
@@ -44,7 +44,7 @@ while True:
         # Process the next subdirectory in the queue
         subdirectory = subdirectory_queue.popleft()
         print(f"Alright, let's get to work on {subdirectory}...")
-        
+
         betanin.import_downloads(subdirectory)
         if betanin.check_manual_intervention_needed():
             print(f"Manual intervention needed for {subdirectory}. I'll have to skip this one for now.")
