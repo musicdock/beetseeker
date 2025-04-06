@@ -2,6 +2,10 @@
 
 # You must customize this file and rename it to config.py
 
+# Modo DEBUG - activa logging extendido con emojis y más detalles
+# True = Activado, False = Desactivado (menos información en logs)
+DEBUG = True
+
 # The slskd "completed" directory
 DOWNLOADS_DIRECTORY = "/data/slskd/music/complete"
 # The path BeetSeeker should watch
