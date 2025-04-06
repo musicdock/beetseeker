@@ -4,13 +4,25 @@ WORKDIR /app
 
 # Copiar los archivos de requisitos primero para aprovechar la caché de Docker
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar el resto de archivos
+# Copiar el código fuente
 COPY main.py slskd.py betanin.py example_config.py ./
 
-# Configurar PYTHONPATH para que encuentre los módulos en el directorio actual
-ENV PYTHONPATH="${PYTHONPATH}:/app"
+# Puerto para la interfaz de depuración
+EXPOSE 8347
 
-# Verificar que config.py existe, si no, crear uno a partir de example_config.py
-CMD ["python", "-c", "import os; os.system('if [ ! -f config.py ]; then cp example_config.py config.py; fi'); os.system('python main.py')"]
+# Configuración del entorno - corregida para evitar la advertencia
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH="/app"
+
+# Asegurar que existe un archivo de configuración
+RUN echo '#!/bin/sh\n\
+if [ ! -f /app/config.py ]; then\n\
+  echo "No config.py found, using example_config.py"\n\
+  cp /app/example_config.py /app/config.py\n\
+fi\n\
+python /app/main.py\n' > /app/entrypoint.sh && chmod +x /app/entrypoint.sh
+
+# Punto de entrada
+ENTRYPOINT ["/app/entrypoint.sh"]
